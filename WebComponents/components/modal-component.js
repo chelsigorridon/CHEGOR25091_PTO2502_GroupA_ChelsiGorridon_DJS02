@@ -127,3 +127,30 @@ templateTwo.innerHTML = `
  
   `;
 
+  class ModalComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.appendChild(templateTwo.content.cloneNode(true));
+  }
+
+  connectedCallback() {
+    const closeBtn = this.shadowRoot.querySelector('#closeModal');
+    const modal = this.shadowRoot.querySelector('#modal');
+
+      closeBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+
+      modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+
+      document.body.addEventListener('card-selected', (event) => {
+      const data = event.detail;
+      this.show(data);
+    });
+  }
+
+
+
