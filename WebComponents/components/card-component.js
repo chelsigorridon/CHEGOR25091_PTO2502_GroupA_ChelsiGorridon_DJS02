@@ -1,4 +1,5 @@
 
+ import { genres } from "../data.js"
 
 export const template = document.createElement('template')
 
@@ -9,12 +10,6 @@ template.innerHTML = `
 box-sizing: border-box;
 }
 
-.wrapper {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  padding: 1rem;
-}
 
 
 .check {
@@ -30,27 +25,56 @@ box-sizing: border-box;
   transform: scale(1.02);
 }
 
-img {
+.images {
   width: 100%;
   border-radius: 6px;
+}
+
+ h2{
+  margin: 0.5rem 0;
+}
+
+.card p {
+  margin: 0px;
+  font-size: 0.8rem;
+  color: var(--grey-text);
+}
+
+.seasons, .genres {
+  margin: 0.5rem 0;
+}
+
+.seasons, .genres {
+  background: #eee;
+  padding: 0.3rem 0.6rem;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 0.8rem;
+}
+
+.updated {
+  font-size: 0.8rem;
+  color: var(--grey-text);
 }
 
 
 
   </style>
 
-   <div class="wrapper">
-    <div class="check">
-    <img class="images" />
-    <h2></h2>
-    <div class="genres"></div>
-    <div class="seasons"></div>
-    <div class="updated"></div>
-  </div> 
+   <div class="check">
+  <img class="images" />
+  <h2></h2>
+  <div class="genres"></div>
+  <div class="seasons"></div>
+  <div class="updated"></div>
   </div>
-  
+
   
   `;
+
+ 
 
   class cardComponent extends HTMLElement {
   constructor() {
@@ -60,32 +84,77 @@ img {
   }
 
   static get observedAttributes() {
-    return ["title", "description", "image", "genres", "seasons", "updated"];
+    return ["title", "image", "genres", "seasons", "updated"];
   }
 
   connectedCallback() {
     this.render();
   }
+     
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) this.render();
   }
 
   render() {
-    if (!this.shadowRoot) return;
+  if (!this.shadowRoot) return;
 
-    this.shadowRoot.querySelector("h2").textContent =
-      this.getAttribute("title") || "";
-    this.shadowRoot.querySelector("img").src =
-      this.getAttribute("image") || "";
-    this.shadowRoot.querySelector(".genres").textContent =
-      "Genres: " + (this.getAttribute("genres") || "");
-    this.shadowRoot.querySelector(".seasons").textContent =
-      "Seasons: " + (this.getAttribute("seasons") || "");
-    this.shadowRoot.querySelector(".updated").textContent =
-      "Updated: " + (this.getAttribute("updated") || "");
-  }
-     
+  this.shadowRoot.querySelector("h2").textContent =
+    this.getAttribute("title") || "";
+  this.shadowRoot.querySelector("img").src =
+    this.getAttribute("image") || "";
+  this.shadowRoot.querySelector(".seasons").textContent =
+    "Seasons: " + (this.getAttribute("seasons") || "");
+  this.shadowRoot.querySelector(".updated").textContent =
+    "Updated: " + (this.getAttribute("updated") || "");
 
+  const genresDiv = this.shadowRoot.querySelector(".genres");
+  genresDiv.innerHTML = "";
+  const genresAttr = this.getAttribute("genres");
+  if (genresAttr) {
+    let ids;
+    try {
+      ids = JSON.parse(genresAttr);
+    } catch {
+      ids = genresAttr.split(",");
     }
-    customElements.define("card-component", cardComponent )
+
+    ids.forEach(id => {
+      const span = document.createElement("span");
+      if (genres[id]) {
+        span.textContent = typeof genres[id] === "string" ? genres[id] : genres[id].name || "Unknown";
+      } else {
+        span.textContent = id;
+      }
+      span.style.background = "#eee";
+      span.style.padding = "2px 6px";
+      span.style.marginRight = "6px";
+      span.style.borderRadius = "4px";
+      genresDiv.appendChild(span);
+    });
+  }
+
+ 
+  const check = this.shadowRoot.querySelector(".check");
+  if (check && !check.dataset.listenerAdded) {
+    check.addEventListener("click", () => {
+      this.dispatchEvent(
+        new CustomEvent("card-selected", {
+          detail: {
+            title: this.getAttribute("title"),
+            image: this.getAttribute("image"),
+            genres: this.getAttribute("genres"),
+            seasons: this.getAttribute("seasons"),
+            updated: this.getAttribute("updated"),
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    });
+    check.dataset.listenerAdded = "true";
+  }
+}
+   
+  }
+   customElements.define("card-component", cardComponent )
