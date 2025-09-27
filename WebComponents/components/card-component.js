@@ -1,3 +1,5 @@
+
+
 const template = document.createElement('template')
 
 template.innerHTML = `
@@ -32,17 +34,9 @@ box-sizing: border-box;
   </style>
 
   <div class="wrapper">
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
-    <div class="check">Card Component</div>
+    <div class="check"> </div>
   </div>
+  
   
   `;
 
@@ -54,8 +48,20 @@ box-sizing: border-box;
     const {content} = template; 
     this.inner.appendChild(content.cloneNode(true))
    
+    }
+
+    static get observedAttributes(){
+      return ["title", "image", "genres", "seasons", "updated" ]
+
+    }
+
+    attributeChangedCallback (name, oldValue, newValue) {
+      if (oldValue !== newValue){
+        this[name] = newValue;
+        this.render();
+      }
+    }
 
   }
 
-}
   customElements.define("card-component", cardComponent )
