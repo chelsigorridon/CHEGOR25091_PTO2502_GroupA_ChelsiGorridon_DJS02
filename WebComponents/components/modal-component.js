@@ -1,7 +1,7 @@
 
-export const templateTwo = document.createElement('templateTwo')
+export const template = document.createElement('template')
 
-templateTwo.innerHTML = `
+template.innerHTML = `
 <style>
 
 .modal {
@@ -131,7 +131,7 @@ templateTwo.innerHTML = `
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this.shadowRoot.appendChild(templateTwo.content.cloneNode(true));
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
   connectedCallback() {
@@ -151,6 +151,46 @@ templateTwo.innerHTML = `
       this.show(data);
     });
   }
+
+  show(data) {
+    const modal = this.shadowRoot.querySelector('#modal');
+    this.shadowRoot.querySelector('#modalTitle').textContent = data.title;
+    this.shadowRoot.querySelector('#modalImage').src = data.image;
+    this.shadowRoot.querySelector('#modalDesc').textContent = data.description || '';
+    this.shadowRoot.querySelector('#modalUpdated').textContent = `Updated: ${data.updated || ''}`;
+
+
+     const genresDiv = this.shadowRoot.querySelector('#modalGenres');
+    genresDiv.innerHTML = ''; 
+    if (data.genres) {
+      data.genres.split(',').forEach((g) => {
+        const tag = document.createElement('span');
+        tag.textContent = g.trim();
+        tag.style.marginRight = '6px';
+        tag.style.padding = '2px 6px';
+        tag.style.background = '#eee';
+        tag.style.borderRadius = '4px';
+        genresDiv.appendChild(tag);
+      });
+    }
+
+      const seasonList = this.shadowRoot.querySelector('#seasonList');
+    seasonList.innerHTML = '';
+    if (data.seasons) {
+      for (let i = 1; i <= data.seasons; i++) {
+        const li = document.createElement('li');
+        li.className = 'season-item';
+        li.textContent = `Season ${i}`;
+        seasonList.appendChild(li);
+      }
+    }
+
+    
+    modal.classList.remove('hidden');
+  }
+}
+
+customElements.define('modal-component', ModalComponent);
 
 
 
