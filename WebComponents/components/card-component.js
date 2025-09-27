@@ -30,5 +30,32 @@ box-sizing: border-box;
 
 
   </style>
+
+  <div class="wrapper">
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+    <div class="check">Card Component</div>
+  </div>
   
   `;
+
+  class cardComponent extends HTMLElement {
+    inner=this.attachShadow({mode: "open"});
+
+    constructor() {
+    super();
+    const {content} = template; 
+    this.inner.appendChild(content.cloneNode(true))
+   
+
+  }
+
+}
+  customElements.define("card-component", cardComponent )
