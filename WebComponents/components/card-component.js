@@ -1,6 +1,6 @@
 
 
-const template = document.createElement('template')
+export const template = document.createElement('template')
 
 template.innerHTML = `
 <style>
@@ -30,38 +30,62 @@ box-sizing: border-box;
   transform: scale(1.02);
 }
 
+img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+
 
   </style>
 
-  <div class="wrapper">
-    <div class="check"> </div>
+   <div class="wrapper">
+    <div class="check">
+    <img class="images" />
+    <h2></h2>
+    <div class="genres"></div>
+    <div class="seasons"></div>
+    <div class="updated"></div>
+  </div> 
   </div>
   
   
   `;
 
   class cardComponent extends HTMLElement {
-    inner=this.attachShadow({mode: "open"});
-
-    constructor() {
+  constructor() {
     super();
-    const {content} = template; 
-    this.inner.appendChild(content.cloneNode(true))
-   
-    }
-
-    static get observedAttributes(){
-      return ["title", "image", "genres", "seasons", "updated" ]
-
-    }
-
-    attributeChangedCallback (name, oldValue, newValue) {
-      if (oldValue !== newValue){
-        this[name] = newValue;
-        this.render();
-      }
-    }
-
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
-  customElements.define("card-component", cardComponent )
+  static get observedAttributes() {
+    return ["title", "description", "image", "genres", "seasons", "updated"];
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue) this.render();
+  }
+
+  render() {
+    if (!this.shadowRoot) return;
+
+    this.shadowRoot.querySelector("h2").textContent =
+      this.getAttribute("title") || "";
+    this.shadowRoot.querySelector("img").src =
+      this.getAttribute("image") || "";
+    this.shadowRoot.querySelector(".genres").textContent =
+      "Genres: " + (this.getAttribute("genres") || "");
+    this.shadowRoot.querySelector(".seasons").textContent =
+      "Seasons: " + (this.getAttribute("seasons") || "");
+    this.shadowRoot.querySelector(".updated").textContent =
+      "Updated: " + (this.getAttribute("updated") || "");
+  }
+     
+
+    }
+    customElements.define("card-component", cardComponent )
