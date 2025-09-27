@@ -124,7 +124,6 @@ templateTwo.innerHTML = `
         <ul id="seasonList" class="season-list"></ul>
       </div>
     </div> 
-
-  
+ 
   `;
 
