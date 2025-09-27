@@ -17,9 +17,13 @@
 
     <main id="podcastGrid" class="grid"></main>
 
-    <!-- Modal -->
+
+    <div id="podcast-list"></div>      
+    <modal-component ></modal-component>
+
+    
     <div id="modal" class="modal hidden">
-      <div class="modal-content">
+       <div class="modal-content">
         <div class="title-section">
           <h2 id="modalTitle"></h2>
           <button class="close-btn" id="closeModal">&times;</button>
@@ -37,8 +41,7 @@
         <h3>Seasons</h3>
         <ul id="seasonList" class="season-list"></ul>
       </div>
-    </div>
-
-    <script type="module" defer src="./src/index.js"></script>
+    </div> 
+ <script type="module" src="./WebComponents/index.js"></script>
   </body>
 </html>
