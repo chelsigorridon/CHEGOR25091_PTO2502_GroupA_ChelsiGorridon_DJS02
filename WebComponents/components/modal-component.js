@@ -1,3 +1,5 @@
+import { genres } from "../data.js";
+
 /**
  * HTML template for the ModalComponent.
  * Contains modal structure, styles, and placeholders for dynamic content.
@@ -191,40 +193,97 @@ template.innerHTML = `
     const modal = this.shadowRoot.querySelector('#modal');
     this.shadowRoot.querySelector('#modalTitle').textContent = data.title;
     this.shadowRoot.querySelector('#modalImage').src = data.image;
-    this.shadowRoot.querySelector('#modalDesc').textContent = data.description || '';
-    this.shadowRoot.querySelector('#modalUpdated').textContent = `Updated: ${data.updated || ''}`;
+
+
+    const descEl = this.shadowRoot.querySelector('#modalDesc');
+
+   if (data.description) {
+  
+   descEl.textContent = data.description;
+   } else if (data.genres) {
+  
+   let ids;
+   try {
+    ids = JSON.parse(data.genres);
+   } catch {
+    ids = data.genres.split(',').map(id => id.trim());
+   }
+
+   const genreObj = genres.find(g => g.id === Number(ids[0]));
+   descEl.textContent = genreObj ? genreObj.description : "No description available.";
+  } else {
+   descEl.textContent = "No description available.";
+  }
+
+
+    const updatedEl = this.shadowRoot.querySelector('#modalUpdated');
+
+  if (data.updated) {
+  const date = new Date(data.updated);
+
+  
+   const formatted = date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+   });
+
+  updatedEl.textContent = `Updated: ${formatted}`;
+} else {
+  updatedEl.textContent = "Updated: N/A";
+}
 
 
     // Render genres
 
-     const genresDiv = this.shadowRoot.querySelector('#modalGenres');
-    genresDiv.innerHTML = ''; 
-    if (data.genres) {
-      data.genres.split(',').forEach((g) => {
-        const tag = document.createElement('span');
-        tag.textContent = g.trim();
-        tag.style.marginRight = '6px';
-        tag.style.padding = '2px 6px';
-        tag.style.background = '#eee';
-        tag.style.borderRadius = '4px';
-        genresDiv.appendChild(tag);
-      });
-    }
+    const genresDiv = this.shadowRoot.querySelector('#modalGenres');
+  genresDiv.innerHTML = ''; 
+
+  if (data.genres) {
+  let ids;
+  try {
+    
+    ids = JSON.parse(data.genres);
+  } catch {
+   
+    ids = data.genres.split(',').map(id => id.trim());
+  }
+
+  ids.forEach(id => {
+    const tag = document.createElement('span');
+
+    
+    const genreObj = genres.find(g => g.id === Number(id));
+
+    
+    tag.textContent = genreObj ? genreObj.title : id;
+
+    tag.style.marginRight = '6px';
+    tag.style.padding = '2px 6px';
+    tag.style.background = '#eee';
+    tag.style.borderRadius = '4px';
+
+    genresDiv.appendChild(tag);
+  });
+}
+
+     
 
      // Render seasons
 
-      const seasonList = this.shadowRoot.querySelector('#seasonList');
-    seasonList.innerHTML = '';
-    if (data.seasons) {
-      for (let i = 1; i <= data.seasons; i++) {
+       const seasonList = this.shadowRoot.querySelector('#seasonList');
+       seasonList.innerHTML = '';
+       if (data.seasons) {
+       for (let i = 1; i <= data.seasons; i++) {
         const li = document.createElement('li');
         li.className = 'season-item';
         li.textContent = `Season ${i}`;
         seasonList.appendChild(li);
       }
     }
-
-
+    
     // Show modal
     
     modal.classList.remove('hidden');
