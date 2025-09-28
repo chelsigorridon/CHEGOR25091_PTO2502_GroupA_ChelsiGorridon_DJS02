@@ -1,27 +1,32 @@
-# DJS01: Vanilla JS Podcast App
+# DJS02: Web Components - Podcast App
 
 ## What is the Podcast App? :
 
-The Podcast App allows you to display diffrent genres of Podcasts to listen to. 
-All the podcasts feature on the landing page with an image and description.
-You can then click on the the podcast of your prefrence and a modal will pop up which gives you more information including all the seasons.
+TThe Podcast App is a web application that displays a variety of podcasts across different genres.
+On the landing page, all podcasts are presented as cards showing an image, title, genres, number of seasons, and updated date.
+
+Clicking on a podcast card opens a modal, which provides more detailed information, including the podcast description, a larger image, and a list of all seasons.
+
+The app demonstrates the use of modern Web Components to create reusable, encapsulated custom elements.
 
 ---
 
 ## Key Features:
 
-  - Displays a list of podcasts 
-  - Shows you key details such as the title, genre, amount of seasons and the date
-  - Click on your favourite show to view more details
-  - Gives you a better view of the image in the modal 
-  - Gives you a list of the seasons with episodes 
+  Displays a responsive grid of podcast cards.
+
+- Shows key podcast details: title, genres, number of seasons, and last updated date.
+- Click on a podcast card to open a modal with more information.
+- Modal includes a larger image and detailed description.
+- Displays a list of seasons for the selected podcast.
+- Interactive and reusable components built with Web Components.
   
 
 ## Technology and Coding Languages used:
 
 - HTML
 - CSS
-- Javascript
+- Javascript (ES6+) 
 - Visual Studio Code (VS Code)
 - Git Version control
 
@@ -29,12 +34,11 @@ You can then click on the the podcast of your prefrence and a modal will pop up 
 
 ## Working usage and interactive instructions:
 
-- Open index.html in your browser.
-- The app automatically loads tasks from the data.js file
-- Podcast Tasks 
 
 ## Tasks are displayed :
 
+- Open index.html in a modern web browser.
+- The app automatically loads podcasts from data.js.
 - Podcast Cards in a grid format 
 
 
