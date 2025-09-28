@@ -1,5 +1,6 @@
 
  import { genres } from "../data.js"
+ 
 
 export const template = document.createElement('template')
 
@@ -40,11 +41,15 @@ box-sizing: border-box;
   color: var(--grey-text);
 }
 
-.seasons, .genres {
+.seasons {
   margin: 0.5rem 0;
 }
 
-.seasons, .genres {
+.genres {
+  margin: 0.5rem 0;
+}
+
+.seasons {
   background: #eee;
   padding: 0.3rem 0.6rem;
   margin-right: 0.5rem;
@@ -53,6 +58,18 @@ box-sizing: border-box;
   display: inline-block;
   font-size: 0.8rem;
 }
+
+
+ .genres {
+  background: #eee;
+  padding: 0.3rem 0.6rem;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 0.8rem;
+}
+
 
 .updated {
   font-size: 0.8rem;
@@ -105,8 +122,25 @@ box-sizing: border-box;
     this.getAttribute("image") || "";
   this.shadowRoot.querySelector(".seasons").textContent =
     "Seasons: " + (this.getAttribute("seasons") || "");
-  this.shadowRoot.querySelector(".updated").textContent =
-    "Updated: " + (this.getAttribute("updated") || "");
+
+   const updatedAttr = this.getAttribute("updated");
+
+if (updatedAttr) {
+  const date = new Date(updatedAttr);
+
+  const formatted = date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  this.shadowRoot.querySelector(".updated").textContent = "Updated: " + formatted;
+} else {
+  this.shadowRoot.querySelector(".updated").textContent = "Updated: N/A";
+}
+
 
   const genresDiv = this.shadowRoot.querySelector(".genres");
   genresDiv.innerHTML = "";
@@ -119,22 +153,20 @@ box-sizing: border-box;
       ids = genresAttr.split(",");
     }
 
-    ids.forEach(id => {
-      const span = document.createElement("span");
-      if (genres[id]) {
-        span.textContent = typeof genres[id] === "string" ? genres[id] : genres[id].name || "Unknown";
-      } else {
-        span.textContent = id;
-      }
-      span.style.background = "#eee";
-      span.style.padding = "2px 6px";
-      span.style.marginRight = "6px";
-      span.style.borderRadius = "4px";
-      genresDiv.appendChild(span);
-    });
-  }
+  ids.forEach(id => {
+  const span = document.createElement("span");
 
- 
+  const genreObj = genres.find(g => g.id === Number(id));
+
+  if (genreObj) {
+    span.textContent = genreObj.title;  // <-- use title here
+  } else {
+    span.textContent = id; 
+  }
+  genresDiv.appendChild(span);
+});
+
+
   const check = this.shadowRoot.querySelector(".check");
   if (check && !check.dataset.listenerAdded) {
     check.addEventListener("click", () => {
@@ -157,4 +189,5 @@ box-sizing: border-box;
 }
    
   }
+}
    customElements.define("card-component", cardComponent )
