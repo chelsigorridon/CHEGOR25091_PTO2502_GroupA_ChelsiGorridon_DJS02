@@ -1,4 +1,7 @@
-
+/**
+ * HTML template for the ModalComponent.
+ * Contains modal structure, styles, and placeholders for dynamic content.
+ */
 export const template = document.createElement('template')
 
 template.innerHTML = `
@@ -127,6 +130,13 @@ template.innerHTML = `
  
   `;
 
+  /**
+ * ModalComponent is a custom element that displays detailed information
+ * about a podcast, including title, description, genres, updated date, and seasons.
+ * 
+ * @customElement modal-component
+ */
+
   class ModalComponent extends HTMLElement {
   constructor() {
     super();
@@ -134,23 +144,48 @@ template.innerHTML = `
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
+ /**
+   * Called when the component is added to the DOM.
+   * Sets up event listeners for closing the modal and for listening to
+   * the custom 'card-selected' event to populate the modal data.
+   */
+
   connectedCallback() {
     const closeBtn = this.shadowRoot.querySelector('#closeModal');
     const modal = this.shadowRoot.querySelector('#modal');
+
+  // Close modal when close button is clicked
 
       closeBtn.addEventListener('click', () => {
       modal.classList.add('hidden');
     });
 
+    // Close modal when clicking outside modal content
+
       modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.classList.add('hidden');
     });
+
+    // Listen for custom event 'card-selected' to display modal
 
       document.body.addEventListener('card-selected', (event) => {
       const data = event.detail;
       this.show(data);
     });
   }
+
+    /**
+   * Populates and displays the modal with provided data.
+   * 
+   * @param {Object} data - Podcast data object
+   * @param {string} data.title - Title of the podcast
+   * @param {string} data.image - URL of the podcast image
+   * @param {string} [data.description] - Description text
+   * @param {string} [data.updated] - Last updated text
+   * @param {string} [data.genres] - Comma-separated list of genre names
+   * @param {number} [data.seasons] - Number of seasons
+   */
+
 
   show(data) {
     const modal = this.shadowRoot.querySelector('#modal');
@@ -159,6 +194,8 @@ template.innerHTML = `
     this.shadowRoot.querySelector('#modalDesc').textContent = data.description || '';
     this.shadowRoot.querySelector('#modalUpdated').textContent = `Updated: ${data.updated || ''}`;
 
+
+    // Render genres
 
      const genresDiv = this.shadowRoot.querySelector('#modalGenres');
     genresDiv.innerHTML = ''; 
@@ -174,6 +211,8 @@ template.innerHTML = `
       });
     }
 
+     // Render seasons
+
       const seasonList = this.shadowRoot.querySelector('#seasonList');
     seasonList.innerHTML = '';
     if (data.seasons) {
@@ -185,10 +224,14 @@ template.innerHTML = `
       }
     }
 
+
+    // Show modal
     
     modal.classList.remove('hidden');
   }
 }
+
+// Register the custom element
 
 customElements.define('modal-component', ModalComponent);
 

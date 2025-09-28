@@ -1,6 +1,11 @@
 
  import { genres } from "../data.js"
  
+/**
+ * HTML template for the cardComponent.
+ * Contains card layout, styles, and placeholders for dynamic content.
+ */
+
 
 export const template = document.createElement('template')
 
@@ -91,6 +96,14 @@ box-sizing: border-box;
   
   `;
 
+
+  /**
+ * cardComponent is a custom element representing a podcast card.
+ * Displays image, title, genres, seasons, and last updated date.
+ * Dispatches a 'card-selected' event when clicked.
+ * 
+ * @customElement card-component
+ */
  
 
   class cardComponent extends HTMLElement {
@@ -100,18 +113,43 @@ box-sizing: border-box;
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
+   /**
+   * Attributes observed by this component.
+   * Changes to these attributes trigger re-rendering.
+   */
+
   static get observedAttributes() {
     return ["title", "image", "genres", "seasons", "updated"];
   }
 
+  /**
+   * Called when the element is connected to the DOM.
+   * Triggers the initial render.
+   */
+
   connectedCallback() {
     this.render();
   }
+
+   /**
+   * Called whenever an observed attribute changes.
+   * Re-renders the component if the value has changed.
+   * 
+   * @param {string} name - The attribute name
+   * @param {string} oldValue - Previous attribute value
+   * @param {string} newValue - New attribute value
+   */
      
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) this.render();
   }
+
+   /**
+   * Renders the card content based on current attributes.
+   * Updates title, image, genres, seasons, and updated date.
+   * Adds click listener to dispatch 'card-selected' event once.
+   */
 
   render() {
   if (!this.shadowRoot) return;
@@ -123,12 +161,14 @@ box-sizing: border-box;
   this.shadowRoot.querySelector(".seasons").textContent =
     "Seasons: " + (this.getAttribute("seasons") || "");
 
+    // Updated to human-readable format 
+
    const updatedAttr = this.getAttribute("updated");
 
-if (updatedAttr) {
-  const date = new Date(updatedAttr);
+   if (updatedAttr) {
+    const date = new Date(updatedAttr);
 
-  const formatted = date.toLocaleString(undefined, {
+    const formatted = date.toLocaleString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -136,11 +176,13 @@ if (updatedAttr) {
     minute: "2-digit",
   });
 
-  this.shadowRoot.querySelector(".updated").textContent = "Updated: " + formatted;
-} else {
-  this.shadowRoot.querySelector(".updated").textContent = "Updated: N/A";
-}
+    this.shadowRoot.querySelector(".updated").textContent = "Updated: " + formatted;
+   } else {
+   this.shadowRoot.querySelector(".updated").textContent = "Updated: N/A";
+  }
 
+
+   // Genres
 
   const genresDiv = this.shadowRoot.querySelector(".genres");
   genresDiv.innerHTML = "";
@@ -167,6 +209,8 @@ if (updatedAttr) {
 });
 
 
+   // Click listener to dispatch 'card-selected' event (only once)
+
   const check = this.shadowRoot.querySelector(".check");
   if (check && !check.dataset.listenerAdded) {
     check.addEventListener("click", () => {
@@ -190,4 +234,6 @@ if (updatedAttr) {
    
   }
 }
+    // Register the custom element
+  
    customElements.define("card-component", cardComponent )

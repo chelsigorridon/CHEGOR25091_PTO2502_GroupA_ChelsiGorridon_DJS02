@@ -82,6 +82,7 @@ body {
   color: var(--grey-text);
 }
 
+/* Modal */ 
 
 .modal {
   position: fixed;
@@ -180,6 +181,9 @@ body {
 .hidden {
   display: none;
 }
+
+
+/* Mobile Mode */
 
 @media (max-width: 480px) {
   h1 {
